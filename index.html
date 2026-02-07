@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Propose Day 🧸💍</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Comic Sans MS", "Poppins", cursive;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffe6f0, #fff1c1, #e6f7ff);
+  background-size: 300% 300%;
+  animation: bgMove 12s ease infinite;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* STICKER CARD */
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  max-width: 420px;
+  padding: 28px;
+  text-align: center;
+  background: #fff;
+  border-radius: 30px;
+  border: 4px solid #ffb6d5;
+  box-shadow: 0 12px 0 #ff8fbf;
+  animation: popIn 0.6s ease;
+}
+
+@keyframes popIn {
+  from { transform: translate(-50%, -50%) scale(0.8); }
+  to { transform: translate(-50%, -50%) scale(1); }
+}
+
+.hidden { display: none; }
+
+h1 {
+  color: #ff4d88;
+  margin-bottom: 12px;
+}
+
+p {
+  color: #ff6fa1;
+  font-size: 1.1em;
+  line-height: 1.6;
+  min-height: 90px;
+}
+
+/* BUTTONS */
+button {
+  margin: 10px;
+  padding: 12px 28px;
+  border-radius: 40px;
+  border: none;
+  background: #ff85b3;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #ff5f9e;
+}
+
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #ff5f9e;
+}
+
+.yes {
+  background: #7ed957;
+  box-shadow: 0 6px 0 #52b032;
+}
+
+.no {
+  background: #ff9999;
+  box-shadow: 0 6px 0 #ff6666;
+  position: relative;
+}
+
+/* FLOATING CANDY */
+.float {
+  position: absolute;
+  font-size: 24px;
+  animation: floatUp linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+
+/* GAME */
+#gameArea {
+  height: 150px;
+  border-radius: 20px;
+  border: 3px dashed #ffb6d5;
+  background: #fff7fb;
+  position: relative;
+}
+
+#toy {
+  position: absolute;
+  font-size: 32px;
+  animation: toyMove 2s linear infinite;
+}
+
+@keyframes toyMove {
+  from { left: -10%; top: 50%; }
+  to { left: 110%; top: 50%; }
+}
+
+/* WAVING TEDDY */
+.teddy {
+  font-size: 40px;
+  margin-bottom: 10px;
+  animation: wave 1.2s infinite;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-10deg); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCREEN 1 -->
+<div class="card" id="screen1">
+  <h1>🧁 Happy Propose Day 🧸</h1>
+  <p id="introText"></p>
+  <button onclick="nextScreen()">Next 🍬</button>
+</div>
+
+<!-- SCREEN 2 -->
+<div class="card hidden" id="screen2">
+  <h1>Just a sweet thought 💕</h1>
+  <p id="quoteText"></p>
+  <button onclick="startGame()">Play 🎯</button>
+</div>
+
+<!-- SCREEN 3 -->
+<div class="card hidden" id="screen3">
+  <h1>Catch the Teddy 🧸</h1>
+  <p>Tap the teddy</p>
+  <div id="gameArea">
+    <div id="toy">🧸</div>
+  </div>
+</div>
+
+<!-- SCREEN 4 -->
+<div class="card hidden" id="screen4">
+  <div class="teddy">🧸</div>
+  <h1>Will You Be Mine? 💍</h1>
+  <p>
+    I promise care,<br>
+    sweetness,<br>
+    and a lot of smiles 💕
+  </p>
+  <button class="yes" onclick="accepted()">YES 🥰</button>
+  <button class="no" id="noBtn">NO 🙈</button>
+</div>
+
+<!-- SCREEN 5 -->
+<div class="card hidden" id="screen5">
+  <h1>🧁 YAYYYY 🧸</h1>
+  <p>
+    This just became<br>
+    my favorite moment ever 💖
+  </p>
+</div>
+
+<script>
+/* PERSONALIZE */
+const name = "Your Name";
+
+/* TYPE */
+function typeText(el, text, i = 0) {
+  if (i < text.length) {
+    el.innerHTML += text.charAt(i);
+    setTimeout(() => typeText(el, text, i + 1), 35);
+  }
+}
+
+/* INTRO */
+typeText(
+  document.getElementById("introText"),
+  `Hey ${name} 💖\nI baked something cute for you…`
+);
+
+/* FLOW */
+function nextScreen() {
+  screen1.classList.add("hidden");
+  screen2.classList.remove("hidden");
+  showQuote();
+}
+
+/* QUOTES */
+const quotes = [
+  "You feel like comfort food 🧁",
+  "Life is sweeter with you 🍰",
+  "You’re my favorite treat 🍬",
+  "You make my heart feel warm 🧸",
+  "You’re my daily happiness 💕"
+];
+
+function showQuote() {
+  quoteText.innerHTML = "";
+  typeText(quoteText, quotes[Math.floor(Math.random()*quotes.length)]);
+}
+
+/* GAME */
+function startGame() {
+  screen2.classList.add("hidden");
+  screen3.classList.remove("hidden");
+}
+
+toy.onclick = () => {
+  screen3.classList.add("hidden");
+  screen4.classList.remove("hidden");
+};
+
+/* DODGE NO BUTTON (DESKTOP + MOBILE) */
+const noBtn = document.getElementById("noBtn");
+function dodge() {
+  noBtn.style.transform =
+    `translate(${Math.random()*120-60}px, ${Math.random()*80-40}px)`;
+}
+["mouseover","click","touchstart"].forEach(e =>
+  noBtn.addEventListener(e, dodge)
+);
+
+/* ACCEPT */
+function accepted() {
+  screen4.classList.add("hidden");
+  screen5.classList.remove("hidden");
+}
+
+/* FLOATING CANDY */
+const candies = ["🧁","🍩","🍬","🍭","✨"];
+for (let i = 0; i < 25; i++) {
+  const f = document.createElement("div");
+  f.className = "float";
+  f.innerText = candies[Math.floor(Math.random()*candies.length)];
+  f.style.left = Math.random() * 100 + "vw";
+  f.style.animationDuration = 6 + Math.random() * 6 + "s";
+  document.body.appendChild(f);
+}
+</script>
+
+</body>
+</html>
