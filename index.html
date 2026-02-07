@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Propose Day 🧸💍</title>
-
 <style>
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Comic Sans MS", "Poppins", cursive;
+  font-family: "Comic Sans MS", "Segoe UI", cursive, sans-serif;
+  user-select: none;
 }
 
 body {
@@ -19,6 +19,7 @@ body {
   background: linear-gradient(135deg, #ffe6f0, #fff1c1, #e6f7ff);
   background-size: 300% 300%;
   animation: bgMove 12s ease infinite;
+  touch-action: manipulation;
 }
 
 @keyframes bgMove {
@@ -32,240 +33,636 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(1);
   width: 92%;
   max-width: 420px;
-  padding: 28px;
+  min-height: 320px;
+  padding: 28px 24px;
   text-align: center;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 30px;
   border: 4px solid #ffb6d5;
-  box-shadow: 0 12px 0 #ff8fbf;
-  animation: popIn 0.6s ease;
+  box-shadow: 0 15px 35px rgba(255, 143, 191, 0.3), 
+              0 12px 0 #ff8fbf,
+              inset 0 0 20px rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  z-index: 100;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-@keyframes popIn {
-  from { transform: translate(-50%, -50%) scale(0.8); }
-  to { transform: translate(-50%, -50%) scale(1); }
+.card.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  pointer-events: none;
+  visibility: hidden;
 }
-
-.hidden { display: none; }
 
 h1 {
   color: #ff4d88;
   margin-bottom: 12px;
+  font-size: 1.8rem;
+  text-shadow: 2px 2px 4px rgba(255, 77, 136, 0.1);
 }
 
 p {
   color: #ff6fa1;
   font-size: 1.1em;
   line-height: 1.6;
-  min-height: 90px;
+  margin: 20px 0;
+  padding: 0 10px;
 }
 
 /* BUTTONS */
+.button-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 25px;
+}
+
 button {
-  margin: 10px;
-  padding: 12px 28px;
+  padding: 14px 32px;
   border-radius: 40px;
   border: none;
-  background: #ff85b3;
-  color: #fff;
-  font-size: 1em;
+  background: linear-gradient(145deg, #ff85b3, #ff6fa1);
+  color: white;
+  font-size: 1.1em;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 6px 0 #ff5f9e;
+  box-shadow: 0 6px 0 #ff5f9e,
+              0 4px 15px rgba(255, 133, 179, 0.3);
+  transition: all 0.2s;
+  min-width: 120px;
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+button:hover::after {
+  left: 100%;
 }
 
 button:active {
-  transform: translateY(4px);
+  transform: translateY(6px);
   box-shadow: 0 2px 0 #ff5f9e;
 }
 
 .yes {
-  background: #7ed957;
-  box-shadow: 0 6px 0 #52b032;
+  background: linear-gradient(145deg, #7ed957, #5ac732);
+  box-shadow: 0 6px 0 #52b032,
+              0 4px 15px rgba(126, 217, 87, 0.3);
 }
 
 .no {
-  background: #ff9999;
-  box-shadow: 0 6px 0 #ff6666;
+  background: linear-gradient(145deg, #ff9999, #ff7777);
+  box-shadow: 0 6px 0 #ff6666,
+              0 4px 15px rgba(255, 153, 153, 0.3);
   position: relative;
+  transition: transform 0.3s ease;
 }
 
-/* FLOATING CANDY */
+/* FLOATING ELEMENTS */
 .float {
   position: absolute;
-  font-size: 24px;
+  font-size: 28px;
   animation: floatUp linear infinite;
-  opacity: 0.9;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+  z-index: 1;
 }
 
 @keyframes floatUp {
-  from { transform: translateY(100vh); }
-  to { transform: translateY(-10vh); }
+  0% { 
+    transform: translateY(100vh) rotate(0deg); 
+    opacity: 0; 
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { 
+    transform: translateY(-10vh) rotate(360deg); 
+    opacity: 0; 
+  }
 }
 
-/* GAME */
+/* GAME AREA */
 #gameArea {
   height: 150px;
   border-radius: 20px;
   border: 3px dashed #ffb6d5;
-  background: #fff7fb;
+  background: rgba(255, 247, 251, 0.8);
   position: relative;
+  overflow: hidden;
+  margin: 20px 0;
+  cursor: pointer;
 }
 
 #toy {
   position: absolute;
-  font-size: 32px;
-  animation: toyMove 2s linear infinite;
+  font-size: 48px;
+  animation: toyMove 1.5s linear infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+#toy:active {
+  transform: scale(0.9);
 }
 
 @keyframes toyMove {
-  from { left: -10%; top: 50%; }
-  to { left: 110%; top: 50%; }
+  0% { left: -15%; top: 50%; transform: translateY(-50%); }
+  50% { top: 40%; }
+  100% { left: 115%; top: 50%; transform: translateY(-50%); }
+}
+
+/* HEARTS ANIMATION */
+.hearts {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.heart {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0;
+  animation: heartFloat 3s ease-in-out infinite;
+}
+
+@keyframes heartFloat {
+  0% { 
+    transform: translateY(0) scale(0); 
+    opacity: 0; 
+  }
+  50% { 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateY(-100px) scale(1.5); 
+    opacity: 0; 
+  }
 }
 
 /* WAVING TEDDY */
+.teddy-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
 .teddy {
-  font-size: 40px;
-  margin-bottom: 10px;
-  animation: wave 1.2s infinite;
+  font-size: 60px;
+  display: inline-block;
+  animation: wave 1.5s infinite ease-in-out;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 @keyframes wave {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  50% { transform: rotate(0deg); }
-  75% { transform: rotate(-10deg); }
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-15deg) scale(1.1); }
+  50% { transform: rotate(0deg) scale(1); }
+  75% { transform: rotate(15deg) scale(1.1); }
+}
+
+/* CONFETTI */
+.confetti {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: confettiFall 3s ease-in forwards;
+}
+
+@keyframes confettiFall {
+  0% { 
+    transform: translateY(-100px) rotate(0deg); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateY(100vh) rotate(720deg); 
+    opacity: 0; 
+  }
+}
+
+/* PROGRESS INDICATOR */
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.progress-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffb6d5;
+  transition: all 0.3s;
+}
+
+.progress-dot.active {
+  background: #ff4d88;
+  transform: scale(1.3);
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .card {
+    padding: 20px 15px;
+    min-height: 300px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  button {
+    padding: 12px 24px;
+    font-size: 1em;
+    min-width: 100px;
+  }
+  
+  .button-container {
+    gap: 10px;
+  }
+}
+
+/* PULSE ANIMATION */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
 }
 </style>
 </head>
 
 <body>
 
+<!-- PROGRESS INDICATOR -->
+<div class="progress" id="progress">
+  <div class="progress-dot active" data-screen="1"></div>
+  <div class="progress-dot" data-screen="2"></div>
+  <div class="progress-dot" data-screen="3"></div>
+  <div class="progress-dot" data-screen="4"></div>
+  <div class="progress-dot" data-screen="5"></div>
+</div>
+
 <!-- SCREEN 1 -->
 <div class="card" id="screen1">
-  <h1>🧁 Happy Propose Day 🧸</h1>
+  <div class="teddy-container">
+    <div class="teddy">🧸</div>
+  </div>
+  <h1>🧁 Happy Propose Day! 💝</h1>
   <p id="introText"></p>
-  <button onclick="nextScreen()">Next 🍬</button>
+  <div class="button-container">
+    <button onclick="nextScreen()">Next 🍬</button>
+  </div>
 </div>
 
 <!-- SCREEN 2 -->
 <div class="card hidden" id="screen2">
   <h1>Just a sweet thought 💕</h1>
+  <div class="hearts" id="hearts1"></div>
   <p id="quoteText"></p>
-  <button onclick="startGame()">Play 🎯</button>
+  <div class="button-container">
+    <button onclick="startGame()">Play Game 🎯</button>
+    <button onclick="skipToProposal()">Skip to Proposal 💍</button>
+  </div>
 </div>
 
 <!-- SCREEN 3 -->
 <div class="card hidden" id="screen3">
-  <h1>Catch the Teddy 🧸</h1>
-  <p>Tap the teddy</p>
+  <h1>Catch the Teddy! 🧸</h1>
+  <p>Tap the teddy as many times as you can in 10 seconds!</p>
   <div id="gameArea">
     <div id="toy">🧸</div>
+  </div>
+  <p id="score">Score: 0</p>
+  <div class="button-container">
+    <button onclick="finishGame()">Continue 💕</button>
   </div>
 </div>
 
 <!-- SCREEN 4 -->
 <div class="card hidden" id="screen4">
-  <div class="teddy">🧸</div>
-  <h1>Will You Be Mine? 💍</h1>
+  <div class="teddy-container">
+    <div class="teddy pulse">💍</div>
+  </div>
+  <h1>Will You Be Mine Forever? 💖</h1>
   <p>
     I promise care,<br>
     sweetness,<br>
-    and a lot of smiles 💕
+    and a lifetime of smiles 💕
   </p>
-  <button class="yes" onclick="accepted()">YES 🥰</button>
-  <button class="no" id="noBtn">NO 🙈</button>
+  <div class="button-container">
+    <button class="yes" onclick="accepted()">YES! 🥰</button>
+    <button class="no" id="noBtn">NO 🙈</button>
+  </div>
 </div>
 
 <!-- SCREEN 5 -->
 <div class="card hidden" id="screen5">
-  <h1>🧁 YAYYYY 🧸</h1>
+  <div class="teddy-container">
+    <div class="teddy">💖</div>
+  </div>
+  <h1>🎉 YAYYYY! 🎊</h1>
   <p>
     This just became<br>
-    my favorite moment ever 💖
+    my favorite moment ever! 💖<br><br>
+    <span id="finalMessage"></span>
   </p>
+  <div class="button-container">
+    <button onclick="location.reload()">Play Again 🔄</button>
+  </div>
 </div>
 
-<script>
-/* PERSONALIZE */
-const name = "Vannilla";
+<!-- CONFECTTI CONTAINER -->
+<div class="confetti" id="confetti"></div>
 
-/* TYPE */
-function typeText(el, text, i = 0) {
+<script>
+// PERSONALIZATION
+const recipientName = "My Love";
+let gameScore = 0;
+let gameActive = false;
+let gameTimer;
+let currentScreen = 1;
+let screenElements = {};
+
+// Initialize screen elements
+document.addEventListener('DOMContentLoaded', function() {
+  // Store all screen elements
+  for (let i = 1; i <= 5; i++) {
+    screenElements[i] = document.getElementById(`screen${i}`);
+  }
+  
+  // Start typing effect
+  typeText(
+    document.getElementById("introText"),
+    `Hey ${recipientName} 💖\nI baked something special just for you...`
+  );
+});
+
+// TYPEWRITER EFFECT
+function typeText(el, text, i = 0, callback = null) {
   if (i < text.length) {
     el.innerHTML += text.charAt(i);
-    setTimeout(() => typeText(el, text, i + 1), 35);
+    setTimeout(() => typeText(el, text, i + 1, callback), 35);
+  } else if (callback) {
+    setTimeout(callback, 500);
   }
 }
 
-/* INTRO */
-typeText(
-  document.getElementById("introText"),
-  `Hey ${name} 💖\nI baked something cute for you…`
-);
-
-/* FLOW */
-function nextScreen() {
-  screen1.classList.add("hidden");
-  screen2.classList.remove("hidden");
-  showQuote();
+// UPDATE PROGRESS
+function updateProgress(screenNum) {
+  document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+    dot.classList.toggle('active', index < screenNum);
+  });
 }
 
-/* QUOTES */
+// SCREEN FLOW - FIXED VERSION
+function nextScreen() {
+  // Hide current screen
+  const currentElement = screenElements[currentScreen];
+  if (currentElement) {
+    currentElement.classList.add('hidden');
+  }
+  
+  // Move to next screen
+  currentScreen++;
+  
+  // Show next screen
+  const nextElement = screenElements[currentScreen];
+  if (nextElement) {
+    nextElement.classList.remove('hidden');
+    nextElement.style.visibility = 'visible';
+    nextElement.style.opacity = '1';
+    
+    // Update progress
+    updateProgress(currentScreen);
+    
+    // If going to screen 2, show quote
+    if (currentScreen === 2) {
+      showQuote();
+    }
+  }
+}
+
+// SCREEN 2 - QUOTES
 const quotes = [
-  "You feel like comfort food 🧁",
-  "Life is sweeter with you 🍰",
-  "You’re my favorite treat 🍬",
-  "You make my heart feel warm 🧸",
-  "You’re my daily happiness 💕"
+  "You feel like comfort food on a rainy day 🧁",
+  "Life is sweeter with you in it 🍰",
+  "You're my favorite treat 🍬",
+  "You make my heart feel warm and fuzzy 🧸",
+  "You're my daily dose of happiness 💕",
+  "Every moment with you feels magical ✨"
 ];
 
 function showQuote() {
+  const quoteText = document.getElementById("quoteText");
   quoteText.innerHTML = "";
-  typeText(quoteText, quotes[Math.floor(Math.random()*quotes.length)]);
+  const hearts = document.getElementById("hearts1");
+  hearts.innerHTML = '';
+  
+  // Add floating hearts
+  for (let i = 0; i < 15; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '💖';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDelay = Math.random() * 2 + 's';
+    hearts.appendChild(heart);
+  }
+  
+  typeText(quoteText, quotes[Math.floor(Math.random() * quotes.length)]);
 }
 
-/* GAME */
+// SCREEN 3 - GAME
 function startGame() {
-  screen2.classList.add("hidden");
-  screen3.classList.remove("hidden");
+  // Hide screen 2
+  document.getElementById('screen2').classList.add('hidden');
+  
+  // Show screen 3
+  currentScreen = 3;
+  document.getElementById('screen3').classList.remove('hidden');
+  updateProgress(currentScreen);
+  
+  gameScore = 0;
+  gameActive = true;
+  document.getElementById('score').textContent = 'Score: 0';
+  
+  // Move teddy faster
+  const toy = document.getElementById('toy');
+  toy.style.animationDuration = '1s';
+  toy.style.animationPlayState = 'running';
+  
+  // Game timer
+  let timeLeft = 10;
+  const timerDisplay = document.createElement('div');
+  timerDisplay.id = 'timer';
+  timerDisplay.style.margin = '10px 0';
+  timerDisplay.style.fontSize = '1.2em';
+  timerDisplay.style.color = '#ff4d88';
+  timerDisplay.textContent = `Time: ${timeLeft}s`;
+  
+  const existingTimer = document.getElementById('timer');
+  if (!existingTimer) {
+    document.querySelector('#screen3 p').after(timerDisplay);
+  }
+  
+  const timer = setInterval(() => {
+    timeLeft--;
+    timerDisplay.textContent = `Time: ${timeLeft}s`;
+    
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      gameActive = false;
+      toy.style.animationPlayState = 'paused';
+      timerDisplay.textContent = 'Time\'s up!';
+    }
+  }, 1000);
+  
+  gameTimer = setTimeout(() => {
+    gameActive = false;
+    clearInterval(timer);
+  }, 10000);
 }
 
-toy.onclick = () => {
-  screen3.classList.add("hidden");
-  screen4.classList.remove("hidden");
+// GAME CLICK HANDLER
+document.getElementById('toy').onclick = function() {
+  if (gameActive) {
+    gameScore++;
+    document.getElementById('score').textContent = `Score: ${gameScore}`;
+    
+    // Speed up with each click
+    const toy = document.getElementById('toy');
+    const currentSpeed = parseFloat(toy.style.animationDuration || 1);
+    toy.style.animationDuration = Math.max(0.3, currentSpeed * 0.95) + 's';
+    
+    // Add click effect
+    toy.style.transform = 'scale(1.3)';
+    setTimeout(() => toy.style.transform = 'scale(1)', 150);
+  }
 };
 
-/* DODGE NO BUTTON (DESKTOP + MOBILE) */
-const noBtn = document.getElementById("noBtn");
-function dodge() {
-  noBtn.style.transform =
-    `translate(${Math.random()*120-60}px, ${Math.random()*80-40}px)`;
+function finishGame() {
+  clearTimeout(gameTimer);
+  nextScreen();
 }
-["mouseover","click","touchstart"].forEach(e =>
-  noBtn.addEventListener(e, dodge)
-);
 
-/* ACCEPT */
+// SKIP TO PROPOSAL
+function skipToProposal() {
+  document.getElementById('screen2').classList.add('hidden');
+  currentScreen = 4;
+  document.getElementById('screen4').classList.remove('hidden');
+  updateProgress(currentScreen);
+}
+
+// SCREEN 4 - DODGE BUTTON
+const noBtn = document.getElementById('noBtn');
+function dodgeButton() {
+  const card = document.getElementById('screen4');
+  const cardRect = card.getBoundingClientRect();
+  
+  const maxX = cardRect.width - noBtn.offsetWidth - 40;
+  const maxY = cardRect.height - noBtn.offsetHeight - 40;
+  
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+  
+  noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+  noBtn.style.transition = 'transform 0.3s ease';
+}
+
+// Add multiple event listeners for dodge
+['mouseover', 'click', 'touchstart', 'touchmove'].forEach(event => {
+  noBtn.addEventListener(event, dodgeButton);
+});
+
+// SCREEN 5 - ACCEPTED
 function accepted() {
-  screen4.classList.add("hidden");
-  screen5.classList.remove("hidden");
+  createConfetti();
+  
+  // Hide screen 4
+  document.getElementById('screen4').classList.add('hidden');
+  
+  // Show screen 5
+  currentScreen = 5;
+  document.getElementById('screen5').classList.remove('hidden');
+  updateProgress(currentScreen);
+  
+  const finalMessage = document.getElementById('finalMessage');
+  const messages = [
+    "I can't wait to start this beautiful journey with you! 💕",
+    "You've made me the happiest person alive! 🥰",
+    "Get ready for a lifetime of love and laughter! 💖",
+    "This is just the beginning of our forever! ✨"
+  ];
+  
+  typeText(finalMessage, messages[Math.floor(Math.random() * messages.length)]);
 }
 
-/* FLOATING CANDY */
-const candies = ["🧁","🍩","🍬","🍭","✨"];
-for (let i = 0; i < 25; i++) {
+// CREATE CONFETTI
+function createConfetti() {
+  const confetti = document.getElementById('confetti');
+  confetti.innerHTML = '';
+  
+  const colors = ['#ff6fa1', '#7ed957', '#ffd166', '#8ac6ff', '#ff99c8'];
+  
+  for (let i = 0; i < 150; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.animationDelay = Math.random() * 2 + 's';
+    particle.style.animationDuration = 2 + Math.random() * 2 + 's';
+    confetti.appendChild(particle);
+  }
+}
+
+// FLOATING ELEMENTS
+const candies = ["🧁", "🍩", "🍬", "🍭", "✨", "💖", "💕", "🌸", "🎀", "🎂"];
+for (let i = 0; i < 30; i++) {
   const f = document.createElement("div");
   f.className = "float";
-  f.innerText = candies[Math.floor(Math.random()*candies.length)];
+  f.innerText = candies[Math.floor(Math.random() * candies.length)];
   f.style.left = Math.random() * 100 + "vw";
-  f.style.animationDuration = 6 + Math.random() * 6 + "s";
+  f.style.animationDuration = (6 + Math.random() * 8) + "s";
+  f.style.animationDelay = Math.random() * 5 + "s";
+  f.style.fontSize = (20 + Math.random() * 20) + "px";
   document.body.appendChild(f);
 }
-</script>
 
+// INITIALIZE PROGRESS
+updateProgress(1);
+</script>
 </body>
 </html>
-
